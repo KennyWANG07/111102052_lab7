@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade Submission</title>
+  <link rel="stylesheet" href="111102052_lab7.css">
+<body>
+  <div class="container">
+    <h1>Grade Submission</h1>
+    <div class="form-container">
+      <label for="mathGrade">Math:</label>
+      <input type="number" id="mathGrade" min="0" max="100">
+      <label for="englishGrade">English:</label>
+      <input type="number" id="englishGrade" min="0" max="100">
+      <button id="submitButton">Submit</button>
+    </div>
+    <table id="gradesTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Math</th>
+          <th>English</th>
+          <th>Average</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Average</td>
+          <td id="mathAvg">-</td>
+          <td id="englishAvg">-</td>
+          <td id="overallAvg">-</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <script>
+    document.getElementById('submitButton').addEventListener('click', function () {
+  const mathGrade = parseFloat(document.getElementById('mathGrade').value);
+  const englishGrade = parseFloat(document.getElementById('englishGrade').value);
+
+  if (isNaN(mathGrade) || isNaN(englishGrade) || mathGrade < 0 || mathGrade > 100 || englishGrade < 0 || englishGrade > 100) {
+    alert('Please enter valid grades between 0 and 100 for both Math and English.');
+    return;
+  }
+
+  // Calculate average for the new row
+  const rowAverage = ((mathGrade + englishGrade) / 2).toFixed(2);
+
+  // Add new row to the table
+  const tableBody = document.querySelector('#gradesTable tbody');
+  const rowCount = tableBody.rows.length + 1;
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `<td>${rowCount}</td><td>${mathGrade}</td><td>${englishGrade}</td><td>${rowAverage}</td>`;
+  tableBody.appendChild(newRow);
+
+  // Recalculate averages
+  updateAverages();
+});
+
+function updateAverages() {
+  const rows = document.querySelectorAll('#gradesTable tbody tr');
+  let mathTotal = 0, englishTotal = 0, overallTotal = 0;
+
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    mathTotal += parseFloat(cells[1].textContent);
+    englishTotal += parseFloat(cells[2].textContent);
+    overallTotal += parseFloat(cells[3].textContent);
+  });
+
+  const rowCount = rows.length;
+  document.getElementById('mathAvg').textContent = (mathTotal / rowCount).toFixed(2) || '-';
+  document.getElementById('englishAvg').textContent = (englishTotal / rowCount).toFixed(2) || '-';
+  document.getElementById('overallAvg').textContent = (overallTotal / rowCount).toFixed(2) || '-';
+}
+
+  </script>
+</body>
+</html>
